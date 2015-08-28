@@ -1,11 +1,9 @@
 user_1:
   id: 1
   login: bob
-  crypted_password: "0XlmUuNpE2k=\n"
-  crypted_creditcard: "vYfMxtVB8ezXmQKSNqTC9sPgi8TbsYRxWd7DVbpprzyuEdZ7gftJ/0IXsbXm\nXCU08bTAl0uEFm7dau+eJMXEJg==\n"
-  type: SymmetricUser
+  password: "0XlmUuNpE2k=\n"
+  creditcard: "CBUI2TcYh/ATRB7fYpDBb0t1ifOWPb5jfpO2M8Zy9D/8Gua6/uA+ILHwKtGY\nOgrooPYSxwpBzEZoH18mXqJE7yk=\n"  # "sentry" with 8 characters of prepadding
 user_2:
   id: 2
   login: fred
-  crypted_creditcard: "q2obYAITmK93ylzVS01mJx1jSlnmylMX15nFpb4uKesVgnqvtzBRHZ/SK+Nm\nEzceIoAcJc3DHosVa4VUE/aK/A==\n"
-  
+  creditcard: "CEUx1Ufxi7leQVp0xHhMWKqBcvrb0p3VvX5rqJBXSwddH+Alscs73TEX8Ctn\n9WnV5Ii8txpa20UfM3h5msLpm20=\n"  # "sentry" with 8 different characters of prepadding
