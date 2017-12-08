@@ -27,11 +27,11 @@ module Sentry
     def decrypt_large_from_base64(data, key=nil)
       raise NoPrivateKeyError unless private?
       chunk_length = public_rsa.max_encryptable_length + 11 # 11 is magic padding for RSA encoding
-puts "chunk_length: #{chunk_length}"
+      # puts "chunk_length: #{chunk_length}"
       b64_decoded = Base64.decode64(data)
       padding_length = b64_decoded[0].ord
       data = b64_decoded[1, data.length]
-return (0...data.length).step(chunk_length).inject("") { |accum, idx| accum + decrypt_with_padding(data.slice(idx, chunk_length), padding_length, key)}
+      return (0...data.length).step(chunk_length).inject("") { |accum, idx| accum + decrypt_with_padding(data.slice(idx, chunk_length), padding_length, key)}
     end
 
     def chunk_size(padding_length)
@@ -103,6 +103,7 @@ return (0...data.length).step(chunk_length).inject("") { |accum, idx| accum + de
         private_key = options[:key].to_s.empty? ? 
           rsa.to_s :
           SymmetricSentry.new(:algorithm => options[:symmetric_algorithm]).encrypt_to_base64(rsa.to_s, options[:key])
+        File.open(public_key_file, 'w') { |f| f.write(public_key) }
         File.open(private_key_file, 'w') { |f| f.write(private_key) }
       end
 
