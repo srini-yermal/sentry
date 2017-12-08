@@ -27,24 +27,27 @@ module ActiveRecord # :nodoc:
         #before_validation temp_sentry
         #after_save temp_sentry
         unless instance_methods.include?("#{attr_name}_with_decryption")
-          define_attribute_methods
           # define_read_methods
+          define_attribute_methods
 
           define_method("#{attr_name}_with_decryption") do |*optional|
             begin
               crypted_value = self.send("#{attr_name}_without_decryption")
-              #puts "crypted value: #{crypted_value}"
+              # puts "crypted value: #{crypted_value}"
               return nil if crypted_value.nil?
-
               key = optional.shift || (options[:key].is_a?(Proc) ? options[:key].call : options[:key]) || ::Sentry.default_key
+              # puts "key value: #{key}"
               decrypted_value = ::Sentry::AsymmetricSentry.decrypt_large_from_base64(crypted_value, key)
+              # puts "decrypted value: #{decrypted_value}" 
               return decrypted_value
             rescue Exception => e
               nil
             end
           end
 
-          alias_method_chain attr_name, :decryption
+          # alias_method_chain attr_name, :decryption
+          alias_method "#{attr_name}_without_decryption", attr_name
+          alias_method attr_name, "#{attr_name}_with_decryption"
           alias_method "crypted_#{attr_name}", "#{attr_name}_without_decryption"
           alias_method "#{attr_name}_before_type_cast", "#{attr_name}_with_decryption"
 
@@ -54,7 +57,9 @@ module ActiveRecord # :nodoc:
             nil
           end
 
-          alias_method_chain "#{attr_name}=", :encryption
+          # alias_method_chain "#{attr_name}=", :encryption
+          alias_method "#{attr_name}_without_encryption=", "#{attr_name}="
+          alias_method "#{attr_name}=", "#{attr_name}_with_encryption="
         end
 
       end
