@@ -33,12 +33,11 @@ module ActiveRecord # :nodoc:
           define_method("#{attr_name}_with_decryption") do |*optional|
             begin
               crypted_value = self.send("#{attr_name}_without_decryption")
-              # puts "crypted value: #{crypted_value}"
               return nil if crypted_value.nil?
               key = optional.shift || (options[:key].is_a?(Proc) ? options[:key].call : options[:key]) || ::Sentry.default_key
-              # puts "key value: #{key}"
               decrypted_value = ::Sentry::AsymmetricSentry.decrypt_large_from_base64(crypted_value, key)
-              # puts "decrypted value: #{decrypted_value}" 
+              #TODO: This could come from options
+              decrypted_value = decrypted_value.force_encoding("UTF-8") if (!decrypted_value.nil? and decrypted_value.is_a?(String))
               return decrypted_value
             rescue Exception => e
               nil
